@@ -115,6 +115,38 @@ def create_proxy(parsed_data, connection_type, port, endpoint, interface=None, u
     return parsed_data
 
 
+def readfile(filename):
+    try:
+        with open(filename, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        return None
+    except IOError as e:
+        print(f"Error reading file '{filename}': {e}")
+        return None
+    
+
+def edit_proxy(parsed_data, port, new_connection_type=None, new_endpoint=None, new_interface=None, new_users=None):
+    updated = False
+    for entry in parsed_data:
+        if entry.get('port') == port:
+            if new_connection_type:
+                entry['type'] = new_connection_type
+            if new_endpoint:
+                entry['endpoint'] = new_endpoint
+            if new_interface is not None:
+                entry['interface'] = new_interface
+            if new_users is not None:
+                entry['users'] = new_users
+            updated = True
+            break
+    
+    if not updated:
+        raise ValueError(f"Proxy with port {port} not found.")
+    
+    return parsed_data
+
 test_data = """#Auth
 auth strong
 #auth file 

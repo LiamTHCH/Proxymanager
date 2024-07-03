@@ -37,11 +37,15 @@ This script facilitates the management of 3proxy configurations. It enables user
 
 ### Parsing Configurations
 
-The `parse_config` function parses a formatted string of 3proxy configurations, extracting proxy type, port, endpoint, interface (if specified), and associated users.
+The `parse_config` function parses a formatted string or file of 3proxy configurations, extracting proxy type, port, endpoint, interface (if specified), and associated users.
 
 ### Adding a Proxy
 
 Use the `create_proxy` function to add a new proxy entry. Provide parameters for type, port, endpoint, interface (optional), and users (optional).
+
+### Editing a Proxy
+
+The `edit_proxy` function allows modifying an existing proxy entry identified by its port number. It accepts parameters to update connection type, endpoint, interface, and users associated with the proxy.
 
 ### Listing Proxies
 
@@ -62,3 +66,7 @@ The `generate_all_configurations` function generates configuration strings for a
 ### Writing Configurations to File
 
 Use `write_to_file(filename, configurations)` to write all generated 3proxy configurations to a file.
+
+### Reading Configurations from File
+
+The `readfile(filename)` function reads content from a specified file, facilitating the input of existing configurations for parsing and manipulation.
