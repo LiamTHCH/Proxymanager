@@ -65,7 +65,7 @@ The `generate_all_configurations` function generates configuration strings for a
 
 ### Writing Configurations to File
 
-Use `write_to_file(filename, configurations)` to write all generated 3proxy configurations to a file.
+Use `write_config_to_file(filename, configurations)` to write all generated 3proxy configurations to a file.
 
 ### Reading Configurations from File
 

@@ -90,7 +90,7 @@ def generate_all_configurations(parsed_data):
     configurations = ["#Auth\nauth strong\n#auth file \nusers $/etc/3proxy/.proxyauth"] + configurations 
     return configurations
 
-def write_to_file(filename, configurations):
+def write_config_to_file(filename, configurations):
     with open(filename, 'w') as f:
         for config in configurations:
             f.write(config)
