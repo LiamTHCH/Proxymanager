@@ -1,4 +1,8 @@
 import re
+import os
+import hashlib
+import sys
+
 
 def parse_config(config):
     parsed_data = []
@@ -147,21 +151,45 @@ def edit_proxy(parsed_data, port, new_connection_type=None, new_endpoint=None, n
     
     return parsed_data
 
-test_data = """#Auth
-auth strong
-#auth file 
-users $/etc/3proxy/.proxyauth
 
-allow user1,user2
-socks -p1080 -e1.1.1.1 -Deth0
-flush
+def load_users(user_file):
+    """Load users from the file."""
+    if not os.path.exists(user_file):
+        return []
+    with open(user_file, 'r') as file:
+        lines = file.readlines()
+    return [line.strip() for line in lines if line.startswith("users")]
 
-allow user3,user5
-proxy -p111231 -e1.1.1.1 -Deth0
-flush
-"""
+def save_users(user_file, users):
+    """Save users to the file."""
+    with open(user_file, 'w') as file:
+        for user in users:
+            file.write(user + '\n')
 
-parsed_data = parse_config(test_data)
-print(parsed_data)
-create_proxy(parsed_data, 'proxy', 1081, '1.1.1.1', 'eth1', ['user1', 'user2'])
-write_to_file('output.txt', generate_all_configurations(parsed_data))
+
+def hash_password(password):
+    """Hash the password using SHA-256."""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def add_user(user_file, username, password, password_type):
+    """Add a new user to the file."""
+    users = load_users(user_file)
+    if password_type == 'CR':
+        password = hash_password(password)
+    new_user = f"users {username}:{password_type}:{password}"
+    users.append(new_user)
+    save_users(user_file, users)
+    print(f"User '{username}' added successfully.")
+
+def remove_user(user_file, username):
+    """Remove an existing user from the file."""
+    users = load_users(user_file)
+    users = [user for user in users if not user.startswith(f"users {username}:")]
+    save_users(user_file, users)
+    print(f"User '{username}' removed successfully.")
+
+def list_users(user_file):
+    """List all users."""
+    users = load_users(user_file)
+    for user in users:
+        print(user)
